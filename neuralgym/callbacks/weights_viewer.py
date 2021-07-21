@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 
 from . import CallbackLoc, OnceCallback
-from ..utils.logger import callback_log
+from ..logger import callback_log
 
 
 class WeightsViewer(OnceCallback):

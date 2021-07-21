@@ -2,7 +2,7 @@
 import tensorflow as tf
 
 from . import ScheduledCallback, CallbackLoc
-from ..utils.logger import callback_log
+from ..logger import callback_log
 from ..ops.summary_ops import scalar_summary
 
 

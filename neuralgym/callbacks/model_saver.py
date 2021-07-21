@@ -2,7 +2,7 @@
 import os
 
 from . import PeriodicCallback, CallbackLoc
-from ..utils.logger import callback_log
+from ..logger import callback_log
 
 
 class ModelSaver(PeriodicCallback):

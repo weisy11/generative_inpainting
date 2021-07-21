@@ -3,8 +3,6 @@ import time
 import tensorflow as tf
 
 from . import PeriodicCallback, CallbackLoc
-from ..utils.logger import ProgressBar, callback_log
-from ..ops.summary_ops import scalar_summary
 from ..train.trainer import Trainer
 
 

@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 
 from . import CallbackLoc, OnceCallback
-from ..utils.logger import callback_log
+from ..logger import callback_log
 
 
 class NPZModelLoader(OnceCallback):
