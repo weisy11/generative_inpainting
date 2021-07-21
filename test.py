@@ -3,9 +3,9 @@ import argparse
 import cv2
 import numpy as np
 import tensorflow as tf
-import neuralgym as ng
 
 from inpaint_model import InpaintCAModel
+from neuralgym.config import Config
 
 
 parser = argparse.ArgumentParser()
@@ -20,7 +20,7 @@ parser.add_argument('--checkpoint_dir', default='', type=str,
 
 
 if __name__ == "__main__":
-    FLAGS = ng.Config('inpaint.yml')
+    FLAGS = Config('inpaint.yml')
     # ng.get_gpus(1)
     args, unknown = parser.parse_known_args()
 

@@ -5,9 +5,9 @@ import argparse
 import cv2
 import numpy as np
 import tensorflow as tf
-import neuralgym as ng
 
 from inpaint_model import InpaintCAModel
+from neuralgym.utils import get_gpus
 
 
 parser = argparse.ArgumentParser()
@@ -28,7 +28,7 @@ parser.add_argument(
 
 
 if __name__ == "__main__":
-    ng.get_gpus(1)
+    get_gpus(1)
     # os.environ['CUDA_VISIBLE_DEVICES'] =''
     args = parser.parse_args()
 
