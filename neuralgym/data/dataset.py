@@ -1,7 +1,4 @@
 from abc import abstractmethod
-import logging
-
-import tensorflow as tf
 
 
 class Dataset(object):

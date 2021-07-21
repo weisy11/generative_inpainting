@@ -4,7 +4,6 @@ import threading
 
 import tensorflow as tf
 
-from ..utils.logger import ProgressBar
 from ..ops.train_ops import average_gradients, process_gradients
 from .trainer import Trainer
 

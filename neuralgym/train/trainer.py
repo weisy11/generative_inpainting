@@ -4,7 +4,7 @@ import logging
 import numpy as np
 import tensorflow as tf
 
-from ..utils.logger import ProgressBar
+from ..logger import ProgressBar
 from ..callbacks import CallbackLoc
 from ..callbacks import PeriodicCallback, OnceCallback, ScheduledCallback
 from ..ops.train_ops import process_gradients
