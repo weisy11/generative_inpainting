@@ -22,6 +22,31 @@ class InpaintCAModel(Model):
     def __init__(self):
         super().__init__('InpaintCAModel')
 
+    def build_test_net(self, x, mask, reuse=False,
+                       training=True, padding='SAME', name='inpaint_net'):
+        """Inpaint network.
+
+                Args:
+                    x: incomplete image, [-1, 1]
+                    mask: mask region {0, 1}
+                Returns:
+                    [-1, 1] as predicted image
+                """
+        xin = x
+        offset_flow = None
+        ones_x = tf.ones_like(x)[:, :, :, 0:1]
+        x = tf.concat([x, ones_x, ones_x * mask], axis=3)
+
+        # two stage network
+        cnum = 48
+        with tf.variable_scope(name, reuse=reuse), \
+             arg_scope([gen_conv, gen_deconv],
+                       training=training, padding=padding):
+            # stage1
+            x = gen_conv(x, cnum, 5, 1, name='conv1')
+
+        return x, x, offset_flow
+
     def build_inpaint_net(self, x, mask, reuse=False,
                           training=True, padding='SAME', name='inpaint_net'):
         """Inpaint network.
@@ -292,3 +317,30 @@ class InpaintCAModel(Model):
         # apply mask and reconstruct
         batch_complete = batch_predict*masks + batch_incomplete*(1-masks)
         return batch_complete
+
+    def build_test_graph(self, FLAGS, batch_data, reuse=False, is_training=False):
+        """
+        """
+        # generate mask, 1 represents masked point
+        if FLAGS.guided:
+            batch_raw, edge, masks_raw = tf.split(batch_data, 3, axis=2)
+            edge = edge[:, :, :, 0:1] / 255.
+            edge = tf.cast(edge > FLAGS.edge_threshold, tf.float32)
+        else:
+            batch_raw, masks_raw = tf.split(batch_data, 2, axis=2)
+        masks = tf.cast(masks_raw[0:1, :, :, 0:1] > 127.5, tf.float32)
+
+        batch_pos = batch_raw / 127.5 - 1.
+        batch_incomplete = batch_pos * (1. - masks)
+        if FLAGS.guided:
+            edge = edge * masks[:, :, :, 0:1]
+            xin = tf.concat([batch_incomplete, edge], axis=3)
+        else:
+            xin = batch_incomplete
+        # inpaint
+        x1, x2, flow = self.build_inpaint_net(
+            xin, masks, reuse=reuse, training=is_training)
+        # batch_predict = x2
+        # apply mask and reconstruct
+        # batch_complete = batch_predict*masks + batch_incomplete*(1-masks)
+        return x1
